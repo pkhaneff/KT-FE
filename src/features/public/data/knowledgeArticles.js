@@ -1,0 +1,77 @@
+export const knowledgeArticles = [
+  {
+    id: 'a1001',
+    category: 'Embedded',
+    tag: 'featured',
+    title: 'Thiết kế hệ thống IoT chống mất gói dữ liệu',
+    excerpt: 'Kiến trúc gateway, QoS MQTT và cơ chế retry giúp dữ liệu cảm biến ổn định khi mạng chập chờn.',
+    read: '8 phút đọc',
+    likes: 122,
+    comments: 34,
+    author: 'Nguyễn Hữu Nam',
+    role: 'Mentor Embedded',
+    date: '18 Th.4',
+    coverLabel: 'iot-reliability.jpg · 1920x820',
+    summary: 'Bài viết đưa ra lộ trình tách module truyền dữ liệu, chuẩn hóa retry/backoff và kiểm thử trong điều kiện mạng yếu.',
+    sections: [
+      {
+        heading: 'Giai đoạn 1 · Nền tảng',
+        content: 'Xác định các điểm rơi mất gói: từ cảm biến, bus nội bộ đến broker. Ưu tiên chuẩn hóa payload, timestamp và ID message trước khi tối ưu hiệu năng.',
+      },
+      {
+        heading: 'Giai đoạn 2 · Prototype',
+        content: 'Xây cơ chế publish theo mức QoS phù hợp, thêm retry có giới hạn và exponential backoff. Theo dõi dead-letter queue để phát hiện sớm các bản tin lỗi.',
+      },
+    ],
+  },
+  {
+    id: 'a1002',
+    category: 'Kinh nghiệm',
+    tag: 'trending',
+    title: 'Checklist demo đồ án tốt nghiệp trước hội đồng',
+    excerpt: 'Danh sách 20 hạng mục cần kiểm tra trước buổi bảo vệ: thiết bị, script demo, số liệu và phương án dự phòng.',
+    read: '6 phút đọc',
+    likes: 97,
+    comments: 21,
+    author: 'Trần Thu Linh',
+    role: 'Mentor Kỹ năng bảo vệ',
+    date: '10 Th.4',
+    coverLabel: 'defense-checklist.jpg · 1920x820',
+    summary: 'Tập trung vào chuẩn bị minh chứng kỹ thuật và quy trình demo theo từng phút để giảm rủi ro phát sinh khi trình bày.',
+    sections: [
+      {
+        heading: 'Giai đoạn 1 · Chuẩn bị',
+        content: 'Khóa phiên bản source code, chốt dữ liệu đầu vào mẫu và chuẩn bị bản in sơ đồ kiến trúc. Đảm bảo mỗi kết quả demo có một chỉ số đo lường đi kèm.',
+      },
+      {
+        heading: 'Giai đoạn 2 · Diễn tập',
+        content: 'Tập trình bày theo timeline cố định, chuẩn bị fallback khi thiết bị lỗi. Ghi chú câu hỏi phản biện thường gặp và câu trả lời ngắn gọn theo ý chính.',
+      },
+    ],
+  },
+  {
+    id: 'a1003',
+    category: 'AI/ML',
+    tag: null,
+    title: 'Tối ưu pipeline huấn luyện CNN cho đề tài nhận diện',
+    excerpt: 'Thiết kế data pipeline, augmentation hợp lý và chiến lược early stopping để giảm thời gian train.',
+    read: '10 phút đọc',
+    likes: 84,
+    comments: 18,
+    author: 'Phạm Minh Quân',
+    role: 'Mentor AI/ML',
+    date: '07 Th.4',
+    coverLabel: 'cnn-pipeline.jpg · 1920x820',
+    summary: 'Bài viết phân tích các điểm nghẽn phổ biến trong training và cách cân bằng giữa tốc độ huấn luyện và độ chính xác mô hình.',
+    sections: [
+      {
+        heading: 'Giai đoạn 1 · Dữ liệu',
+        content: 'Làm sạch dữ liệu, cân bằng lớp và tạo bộ validation độc lập. Tránh augmentation quá mạnh gây lệch phân bố dữ liệu thực tế.',
+      },
+      {
+        heading: 'Giai đoạn 2 · Huấn luyện',
+        content: 'Kết hợp scheduler learning rate, mixed precision và checkpoint định kỳ. Theo dõi metric theo từng lớp để phát hiện overfitting sớm.',
+      },
+    ],
+  },
+]
