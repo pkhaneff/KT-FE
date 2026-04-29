@@ -1,10 +1,12 @@
 import { ArrowLeft, GraduationCap } from 'lucide-react'
+import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Button } from '../../../components/ui/Button'
 import { Card } from '../../../components/ui/Card'
 import { Input } from '../../../components/ui/Input'
 import { Seo } from '../../../core/seo/Seo'
 import { ROUTES } from '../../../core/constants/routes'
+import { useAuth } from '../../auth'
 
 const MODE_TITLE = {
   login: 'Đăng nhập',
@@ -27,20 +29,53 @@ const MODE_DESCRIPTION = {
 export function AuthPage() {
   const location = useLocation()
   const navigate = useNavigate()
+  const { login, register, submitting } = useAuth()
   const mode = location.pathname.includes('/register') ? 'register' : location.pathname.includes('/forgot-password') ? 'forgot' : 'login'
 
   const isRegister = mode === 'register'
   const isForgot = mode === 'forgot'
+  const [form, setForm] = useState({
+    fullName: '',
+    email: '',
+    password: '',
+  })
+  const [errorMessage, setErrorMessage] = useState('')
+  const [infoMessage, setInfoMessage] = useState('')
 
-  const handleSubmit = (event) => {
+  const handleChange = (key) => (event) => {
+    setForm((previous) => ({ ...previous, [key]: event.target.value }))
+  }
+
+  const handleSubmit = async (event) => {
     event.preventDefault()
+    setErrorMessage('')
+    setInfoMessage('')
 
     if (isForgot) {
-      navigate(ROUTES.PUBLIC_LOGIN)
+      setInfoMessage('Hiện backend chưa có API quên mật khẩu. Vui lòng liên hệ hỗ trợ để được reset mật khẩu.')
       return
     }
 
-    navigate(ROUTES.USER_DASHBOARD)
+    try {
+      if (isRegister) {
+        await register({
+          fullName: form.fullName.trim(),
+          email: form.email.trim(),
+          password: form.password,
+        })
+        navigate(ROUTES.PUBLIC_LOGIN, { replace: true })
+        return
+      } else {
+        await login({
+          email: form.email.trim(),
+          password: form.password,
+        })
+        navigate(ROUTES.PUBLIC_LANDING, { replace: true })
+        return
+      }
+    } catch (error) {
+      setErrorMessage(error?.message || 'Không thể xử lý yêu cầu. Vui lòng thử lại.')
+    }
   }
 
   return (
@@ -88,11 +123,44 @@ export function AuthPage() {
             <p className="mt-2 text-sm leading-6 text-slate-600">{MODE_DESCRIPTION[mode]}</p>
 
             <form className="mt-6 space-y-3" onSubmit={handleSubmit}>
-              <Input type="email" placeholder="Email học tập" aria-label="Email học tập" required />
-              {!isForgot ? <Input type="password" placeholder="Mật khẩu" aria-label="Mật khẩu" required /> : null}
-              {isRegister ? <Input placeholder="Trường / khoa" aria-label="Trường hoặc khoa" required /> : null}
+              {isRegister ? (
+                <Input
+                  value={form.fullName}
+                  onChange={handleChange('fullName')}
+                  placeholder="Họ và tên"
+                  aria-label="Họ và tên"
+                  minLength={2}
+                  maxLength={255}
+                  required
+                />
+              ) : null}
 
-              <Button type="submit" size="lg" className="mt-2 w-full justify-center">
+              <Input
+                value={form.email}
+                onChange={handleChange('email')}
+                type="email"
+                placeholder="Email học tập"
+                aria-label="Email học tập"
+                required
+              />
+
+              {!isForgot ? (
+                <Input
+                  value={form.password}
+                  onChange={handleChange('password')}
+                  type="password"
+                  placeholder="Mật khẩu"
+                  aria-label="Mật khẩu"
+                  minLength={8}
+                  maxLength={128}
+                  required
+                />
+              ) : null}
+
+              {errorMessage ? <p className="text-sm font-medium text-rose-600">{errorMessage}</p> : null}
+              {infoMessage ? <p className="text-sm font-medium text-emerald-700">{infoMessage}</p> : null}
+
+              <Button type="submit" size="lg" className="mt-2 w-full justify-center" disabled={submitting}>
                 {isForgot ? 'Gửi liên kết khôi phục' : isRegister ? 'Tạo tài khoản' : 'Đăng nhập'}
               </Button>
             </form>

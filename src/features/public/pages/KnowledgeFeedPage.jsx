@@ -43,6 +43,19 @@ export function KnowledgeFeedPage() {
           description="Nội dung chất lượng cao từ mentor: có phân loại, có xu hướng và có ngữ cảnh theo mục tiêu đồ án."
         />
 
+        <div className="grid gap-3 sm:grid-cols-3">
+          {[
+            ['Bài mới tuần này', '26'],
+            ['Bài nổi bật', '8'],
+            ['Chủ đề đang hot', '12'],
+          ].map(([label, value]) => (
+            <Card key={label} className="p-4">
+              <p className="text-xs text-slate-500">{label}</p>
+              <p className="mt-1 text-2xl font-bold text-slate-900">{value}</p>
+            </Card>
+          ))}
+        </div>
+
         <div className="grid gap-6 xl:grid-cols-[1fr_280px]">
           <div>
             <div className="mb-3 flex flex-wrap gap-2">
