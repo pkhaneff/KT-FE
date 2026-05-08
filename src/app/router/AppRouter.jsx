@@ -1,6 +1,7 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom'
 import { PublicLayout } from '../layouts/PublicLayout'
 import { UserLayout } from '../layouts/UserLayout'
+import { AdminLayout } from '../layouts/AdminLayout'
 import { ROUTES } from '../../core/constants/routes'
 
 import { LandingPage } from '../../features/public/pages/LandingPage'
@@ -23,7 +24,18 @@ import { WalletPage } from '../../features/user/pages/WalletPage'
 import { ProfilePage } from '../../features/user/pages/ProfilePage'
 import { SavedArticlesPage } from '../../features/user/pages/SavedArticlesPage'
 import { SettingsPage } from '../../features/user/pages/SettingsPage'
-import { RedirectIfAuthenticated, RequireAuth } from '../../features/auth'
+import { RedirectIfAuthenticated, RequireAuth, RequireRole } from '../../features/auth'
+import {
+  AdminContentPage,
+  AdminDashboardPage,
+  AdminMentorsPage,
+  AdminOrdersPage,
+  AdminProjectRequestDetailPage,
+  AdminProjectRequestsPage,
+  AdminPostsPage,
+  AdminSettingsPage,
+  AdminUsersPage,
+} from '../../features/admin/pages/AdminPages'
 
 export const appRouter = createBrowserRouter([
   {
@@ -65,6 +77,27 @@ export const appRouter = createBrowserRouter([
           { path: 'profile', element: <ProfilePage /> },
           { path: 'saved-articles', element: <SavedArticlesPage /> },
           { path: 'settings', element: <SettingsPage /> },
+        ],
+      },
+      {
+        element: <RequireRole allowedRoles={['admin']} />,
+        children: [
+          {
+            path: '/admin',
+            element: <AdminLayout />,
+            children: [
+              { index: true, element: <Navigate to={ROUTES.ADMIN_DASHBOARD} replace /> },
+              { path: 'dashboard', element: <AdminDashboardPage /> },
+              { path: 'users', element: <AdminUsersPage /> },
+              { path: 'mentors', element: <AdminMentorsPage /> },
+              { path: 'orders', element: <AdminOrdersPage /> },
+              { path: 'project-requests', element: <AdminProjectRequestsPage /> },
+              { path: 'project-requests/:requestId', element: <AdminProjectRequestDetailPage /> },
+              { path: 'content', element: <AdminContentPage /> },
+              { path: 'posts', element: <AdminPostsPage /> },
+              { path: 'settings', element: <AdminSettingsPage /> },
+            ],
+          },
         ],
       },
     ],

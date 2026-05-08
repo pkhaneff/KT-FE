@@ -117,13 +117,13 @@ export function LandingPage() {
           </p>
 
           <div className="animate-fade-in-up delay-300 mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Link to={ROUTES.PUBLIC_REGISTER}>
+            <Link to={ROUTES.USER_WIZARD}>
               <Button size="lg">
-                Bắt đầu miễn phí <ArrowRight size={18} aria-hidden="true" />
+                Dự án theo yêu cầu <ArrowRight size={18} aria-hidden="true" />
               </Button>
             </Link>
-            <Link to={ROUTES.PUBLIC_WORKFLOW}>
-              <Button variant="secondary" size="lg">Xem quy trình</Button>
+            <Link to={ROUTES.PUBLIC_PRICING}>
+              <Button variant="secondary" size="lg">Dự án có sẵn</Button>
             </Link>
           </div>
         </div>

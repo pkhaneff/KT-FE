@@ -21,6 +21,15 @@ export const ROUTES = {
   USER_PROFILE: '/u/profile',
   USER_SAVED_ARTICLES: '/u/saved-articles',
   USER_SETTINGS: '/u/settings',
+
+  ADMIN_DASHBOARD: '/admin/dashboard',
+  ADMIN_USERS: '/admin/users',
+  ADMIN_MENTORS: '/admin/mentors',
+  ADMIN_ORDERS: '/admin/orders',
+  ADMIN_PROJECT_REQUESTS: '/admin/project-requests',
+  ADMIN_CONTENT: '/admin/content',
+  ADMIN_POSTS: '/admin/posts',
+  ADMIN_SETTINGS: '/admin/settings',
 }
 
 export const PUBLIC_NAVIGATION = [

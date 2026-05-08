@@ -75,6 +75,8 @@ export function AppNavbar() {
   const previewItems = cartItems.slice(0, 5)
 
   const formatMoney = (value) => `${(value || 0).toLocaleString('vi-VN')}đ`
+  const role = String(profile?.role || '').toLowerCase()
+  const dashboardRoute = role === 'admin' ? ROUTES.ADMIN_DASHBOARD : ROUTES.USER_DASHBOARD
 
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur dark:border-slate-800 dark:bg-slate-950/90">
@@ -165,7 +167,7 @@ export function AppNavbar() {
                 <Bell size={18} aria-hidden="true" />
               </Button>
 
-              <NavLink to={ROUTES.USER_DASHBOARD}>
+              <NavLink to={dashboardRoute}>
                 <Button variant="ghost" size="sm" className="gap-2">
                   {profile?.avatar ? (
                     <img
