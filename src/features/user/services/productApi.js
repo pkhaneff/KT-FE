@@ -62,58 +62,32 @@ function withAuth(accessToken) {
   }
 }
 
-export function listProjectTypes() {
-  return apiRequest('/project-types', {
+export function listProductTypes() {
+  return apiRequest('/product-types', {
     method: 'GET',
   })
 }
 
-export function createProjectRequest(accessToken, payload) {
-  return apiRequest('/project-requests', {
+export function listProducts(search = null, productTypeId = null) {
+  const params = new URLSearchParams()
+  if (search) params.append('search', search)
+  if (productTypeId) params.append('product_type_id', productTypeId)
+  
+  return apiRequest(`/products?${params.toString()}`, {
+    method: 'GET',
+  })
+}
+
+export function createProductRequest(accessToken, payload) {
+  return apiRequest('/product-requests', {
     method: 'POST',
     headers: withAuth(accessToken),
     body: JSON.stringify(payload),
   })
 }
 
-export function listProjectRequests(accessToken) {
-  return apiRequest('/project-requests', {
-    method: 'GET',
-    headers: withAuth(accessToken),
-  })
-}
-
-export function listUserProposals(accessToken, requestId) {
-  return apiRequest(`/project-requests/${requestId}/proposals`, {
-    method: 'GET',
-    headers: withAuth(accessToken),
-  })
-}
-
-export function listProposalPhases(accessToken, requestId, proposalId) {
-  return apiRequest(`/project-requests/${requestId}/proposals/${proposalId}/phases`, {
-    method: 'GET',
-    headers: withAuth(accessToken),
-  })
-}
-
-export function listProposalMessages(accessToken, requestId, proposalId) {
-  return apiRequest(`/project-requests/${requestId}/proposals/${proposalId}/messages`, {
-    method: 'GET',
-    headers: withAuth(accessToken),
-  })
-}
-
-export function sendProposalMessage(accessToken, requestId, proposalId, message) {
-  return apiRequest(`/project-requests/${requestId}/proposals/${proposalId}/messages`, {
-    method: 'POST',
-    headers: withAuth(accessToken),
-    body: JSON.stringify({ message }),
-  })
-}
-
-export function listProposalRevisions(accessToken, requestId) {
-  return apiRequest(`/project-requests/${requestId}/proposal-revisions`, {
+export function listMyProductRequests(accessToken) {
+  return apiRequest('/product-requests', {
     method: 'GET',
     headers: withAuth(accessToken),
   })

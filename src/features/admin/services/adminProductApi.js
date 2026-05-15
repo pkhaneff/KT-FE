@@ -29,11 +29,12 @@ function resolveApiErrorMessage(payload, fallbackMessage) {
   return payload?.error?.message || payload?.message || fallbackMessage
 }
 
-async function apiRequest(path, options = {}) {
+async function apiRequest(path, accessToken, options = {}) {
   const response = await fetch(`${API_BASE_URL}${API_PREFIX}${path}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
       ...(options.headers || {}),
     },
   })
@@ -56,65 +57,58 @@ async function apiRequest(path, options = {}) {
   return payload?.data
 }
 
-function withAuth(accessToken) {
-  return {
-    Authorization: `Bearer ${accessToken}`,
-  }
-}
-
-export function listProjectTypes() {
-  return apiRequest('/project-types', {
+export function adminListProductTypes(accessToken) {
+  return apiRequest('/admin/product-types', accessToken, {
     method: 'GET',
   })
 }
 
-export function createProjectRequest(accessToken, payload) {
-  return apiRequest('/project-requests', {
+export function adminCreateProductType(accessToken, payload) {
+  return apiRequest('/admin/product-types', accessToken, {
     method: 'POST',
-    headers: withAuth(accessToken),
     body: JSON.stringify(payload),
   })
 }
 
-export function listProjectRequests(accessToken) {
-  return apiRequest('/project-requests', {
-    method: 'GET',
-    headers: withAuth(accessToken),
+export function adminUpdateProductType(accessToken, productTypeId, payload) {
+  return apiRequest(`/admin/product-types/${productTypeId}`, accessToken, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
   })
 }
 
-export function listUserProposals(accessToken, requestId) {
-  return apiRequest(`/project-requests/${requestId}/proposals`, {
+export function adminListProducts(accessToken, search = null, productTypeId = null) {
+  const params = new URLSearchParams()
+  if (search) params.append('search', search)
+  if (productTypeId) params.append('product_type_id', productTypeId)
+  
+  return apiRequest(`/admin/products?${params.toString()}`, accessToken, {
     method: 'GET',
-    headers: withAuth(accessToken),
   })
 }
 
-export function listProposalPhases(accessToken, requestId, proposalId) {
-  return apiRequest(`/project-requests/${requestId}/proposals/${proposalId}/phases`, {
-    method: 'GET',
-    headers: withAuth(accessToken),
-  })
-}
-
-export function listProposalMessages(accessToken, requestId, proposalId) {
-  return apiRequest(`/project-requests/${requestId}/proposals/${proposalId}/messages`, {
-    method: 'GET',
-    headers: withAuth(accessToken),
-  })
-}
-
-export function sendProposalMessage(accessToken, requestId, proposalId, message) {
-  return apiRequest(`/project-requests/${requestId}/proposals/${proposalId}/messages`, {
+export function adminCreateProduct(accessToken, payload) {
+  return apiRequest('/admin/products', accessToken, {
     method: 'POST',
-    headers: withAuth(accessToken),
-    body: JSON.stringify({ message }),
+    body: JSON.stringify(payload),
   })
 }
 
-export function listProposalRevisions(accessToken, requestId) {
-  return apiRequest(`/project-requests/${requestId}/proposal-revisions`, {
+export function adminUpdateProduct(accessToken, productId, payload) {
+  return apiRequest(`/admin/products/${productId}`, accessToken, {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  })
+}
+
+export function adminDeleteProduct(accessToken, productId) {
+  return apiRequest(`/admin/products/${productId}`, accessToken, {
+    method: 'DELETE',
+  })
+}
+
+export function adminListProductRequests(accessToken) {
+  return apiRequest('/admin/product-requests', accessToken, {
     method: 'GET',
-    headers: withAuth(accessToken),
   })
 }

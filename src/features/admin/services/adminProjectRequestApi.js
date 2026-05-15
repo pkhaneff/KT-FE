@@ -61,7 +61,54 @@ export function listAdminProjectRequests(accessToken) {
   return adminRequest('/admin/project-requests', accessToken, { method: 'GET' })
 }
 
-export function adminProviderDecision(accessToken, requestId, accept) {
-  const query = new URLSearchParams({ accept: String(accept) })
-  return adminRequest(`/admin/project-requests/${requestId}/provider-decision?${query.toString()}`, accessToken, { method: 'POST' })
+export function adminRejectRequest(accessToken, requestId, reason) {
+  return adminRequest(`/admin/project-requests/${requestId}/reject`, accessToken, {
+    method: 'POST',
+    body: JSON.stringify({ reason }),
+  })
+}
+
+export function listAdminProposalMessages(accessToken, requestId, proposalId) {
+  return adminRequest(`/admin/project-requests/${requestId}/proposals/${proposalId}/messages`, accessToken, {
+    method: 'GET',
+  })
+}
+
+export function adminSendProposalMessage(accessToken, requestId, proposalId, message) {
+  return adminRequest(`/admin/project-requests/${requestId}/proposals/${proposalId}/messages`, accessToken, {
+    method: 'POST',
+    body: JSON.stringify({ message }),
+  })
+}
+
+export function adminSendProposal(accessToken, requestId, proposalData) {
+  return adminRequest(`/admin/project-requests/${requestId}/proposals`, accessToken, {
+    method: 'POST',
+    body: JSON.stringify(proposalData),
+  })
+}
+
+export function adminApproveCounterProposal(accessToken, requestId, proposalId) {
+  return adminRequest(`/admin/project-requests/${requestId}/proposals/${proposalId}/approve-counter`, accessToken, {
+    method: 'POST',
+  })
+}
+
+export function adminRejectCounterProposal(accessToken, requestId, proposalId, reason) {
+  return adminRequest(`/admin/project-requests/${requestId}/proposals/${proposalId}/reject-counter`, accessToken, {
+    method: 'POST',
+    body: JSON.stringify({ reason }),
+  })
+}
+
+export function getAdminProjectRequestDetail(accessToken, requestId) {
+  return adminRequest(`/admin/project-requests/${requestId}`, accessToken, {
+    method: 'GET',
+  })
+}
+
+export function listAdminProposals(accessToken, requestId) {
+  return adminRequest(`/admin/project-requests/${requestId}/proposals`, accessToken, {
+    method: 'GET',
+  })
 }

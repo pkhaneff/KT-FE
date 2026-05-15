@@ -29,11 +29,12 @@ function resolveApiErrorMessage(payload, fallbackMessage) {
   return payload?.error?.message || payload?.message || fallbackMessage
 }
 
-async function apiRequest(path, options = {}) {
+async function apiRequest(path, accessToken, options = {}) {
   const response = await fetch(`${API_BASE_URL}${API_PREFIX}${path}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
       ...(options.headers || {}),
     },
   })
@@ -58,62 +59,67 @@ async function apiRequest(path, options = {}) {
 
 function withAuth(accessToken) {
   return {
+    'Content-Type': 'application/json',
     Authorization: `Bearer ${accessToken}`,
   }
 }
 
-export function listProjectTypes() {
-  return apiRequest('/project-types', {
-    method: 'GET',
+export async function userConfirmProposal(accessToken, requestId, proposalId, note) {
+  return apiRequest(`/project-requests/${requestId}/proposals/${proposalId}/confirm`, {
+    method: 'POST',
+    headers: withAuth(accessToken),
+    body: JSON.stringify({ note }),
   })
 }
 
-export function createProjectRequest(accessToken, payload) {
-  return apiRequest('/project-requests', {
+export async function userRejectProposal(accessToken, requestId, proposalId, reason) {
+  return apiRequest(`/project-requests/${requestId}/proposals/${proposalId}/reject`, {
+    method: 'POST',
+    headers: withAuth(accessToken),
+    body: JSON.stringify({ reason }),
+  })
+}
+
+export async function userCounterProposal(accessToken, requestId, payload) {
+  return apiRequest(`/project-requests/${requestId}/counter`, {
     method: 'POST',
     headers: withAuth(accessToken),
     body: JSON.stringify(payload),
   })
 }
 
-export function listProjectRequests(accessToken) {
-  return apiRequest('/project-requests', {
-    method: 'GET',
-    headers: withAuth(accessToken),
-  })
-}
-
-export function listUserProposals(accessToken, requestId) {
-  return apiRequest(`/project-requests/${requestId}/proposals`, {
-    method: 'GET',
-    headers: withAuth(accessToken),
-  })
-}
-
-export function listProposalPhases(accessToken, requestId, proposalId) {
-  return apiRequest(`/project-requests/${requestId}/proposals/${proposalId}/phases`, {
-    method: 'GET',
-    headers: withAuth(accessToken),
-  })
-}
-
-export function listProposalMessages(accessToken, requestId, proposalId) {
-  return apiRequest(`/project-requests/${requestId}/proposals/${proposalId}/messages`, {
-    method: 'GET',
-    headers: withAuth(accessToken),
-  })
-}
-
-export function sendProposalMessage(accessToken, requestId, proposalId, message) {
-  return apiRequest(`/project-requests/${requestId}/proposals/${proposalId}/messages`, {
+export async function userPrepay(accessToken, requestId, idemKey) {
+  return apiRequest(`/project-requests/${requestId}/prepay`, {
     method: 'POST',
     headers: withAuth(accessToken),
-    body: JSON.stringify({ message }),
+    body: JSON.stringify({ idem_key: idemKey }),
   })
 }
 
-export function listProposalRevisions(accessToken, requestId) {
-  return apiRequest(`/project-requests/${requestId}/proposal-revisions`, {
+export async function userSyncPayment(accessToken, requestId, paymentId) {
+  return apiRequest(`/project-requests/${requestId}/payments/${paymentId}/sync`, accessToken, {
+    method: 'POST',
+    headers: withAuth(accessToken),
+  })
+}
+
+export async function userGetContract(accessToken, requestId) {
+  return apiRequest(`/project-requests/${requestId}/contract`, accessToken, {
+    method: 'GET',
+    headers: withAuth(accessToken),
+  })
+}
+
+export async function userCreateChangeRequest(accessToken, requestId, payload) {
+  return apiRequest(`/project-requests/${requestId}/change-requests`, accessToken, {
+    method: 'POST',
+    headers: withAuth(accessToken),
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function userListProposalRevisions(accessToken, requestId) {
+  return apiRequest(`/project-requests/${requestId}/proposal-revisions`, accessToken, {
     method: 'GET',
     headers: withAuth(accessToken),
   })
